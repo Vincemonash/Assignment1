@@ -24,7 +24,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
 
-# **Part A**: Data mini-project
+# **Part A**: Data Mini-project
 
 ## Acronyms
 
@@ -407,11 +407,27 @@ ggplot(mean_education_10 %>%
 
 Data analysis reveals a significant gap in educational achievement between boys and girls, particularly in poorer or unstable countries. For instance, girls in Afghanistan have much less schooling than boys, highlighting stark inequalities. While Albania offers equal educational access, Afghanistan shows lower overall educational levels. These disparities influence economic conditions, political stability, and cultural attitudes, leading to unequal opportunities. Despite global progress, efforts remain essential to ensure equal educational opportunities for all genders worldwide.
 
-# Github
+# **Part B**: Mini-Project Repository
 
-https://github.com/Vincemonash/Assignment1.git
+## Create your GitHub repository and link your mini-project.
 
-git push -u origin master
+The steps below were used to set-up a repository and create a new branch for part 2.
+
+1. Create a new repository in github (https://github.com/Vincemonash/Assignment1.git).
+2. git init
+3. git add .
+4. git commit -m "Initial commit for Assignment1 R project"
+5. git remote add origin https://github.com/Vincemonash/Assignment1.git
+6. git remote -v
+7. git push -u origin master
+8. git checkout -b asspart2
+9. git add .
+10. git commit -m "Changes to accomodate part 2 of assignment 1"
+11. git push -u origin asspart2
+
+
+
+
 
 # References
 
