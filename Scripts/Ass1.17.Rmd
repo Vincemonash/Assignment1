@@ -447,12 +447,70 @@ git checkout master
 git pull origin master
 git merge asspart2B
 
+git switch asspart2
+vi README.md
+
+git switch asspart2B
+vi README.md
+
+### Merge them with the master branch.
+
+git switch master
+git checkout master
+git pull origin master
+git merge asspart2B
+
+git merge asspart2
+
+### Make sure that at least one branch creates a conflict with your master branch.
+
+#### Create commits that show clearly that you merged the branches. In addition, make sure that you have a commit showing that you fixed at least one merging conflict.
+
+$ git merge asspart2
+Auto-merging README.md
+CONFLICT (content): Merge conflict in README.md
+Automatic merge failed; fix conflicts and then commit the result.
+
+\# ETO5513 Assignment 1
+
+<<<<<<< HEAD
+\#\# Description:
+Assignment 1 created in branch asspart2B.
+=======
+\#\# Description: Change made in asspart2B branch.
+>>>>>>> asspart2
+
+git commit -m "Resolved merge conflict in README.md"
+
+$ vi README.md
+
+USER@DESKTOP-KGR3EOI MINGW64 /d/Monash/ETO5513/Assignment1 (master|MERGING)
+$
+
+USER@DESKTOP-KGR3EOI MINGW64 /d/Monash/ETO5513/Assignment1 (master|MERGING)
+$
+
+USER@DESKTOP-KGR3EOI MINGW64 /d/Monash/ETO5513/Assignment1 (master|MERGING)
+$ git add README.md
+
+USER@DESKTOP-KGR3EOI MINGW64 /d/Monash/ETO5513/Assignment1 (master|MERGING)
+$ git commit -m "Resolved merge conflict in README.md"
+[master cde8057] Resolved merge conflict in README.md
+
+USER@DESKTOP-KGR3EOI MINGW64 /d/Monash/ETO5513/Assignment1 (master)
+$ git push
+Enumerating objects: 15, done.
+Counting objects: 100% (14/14), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (11/11), done.
+Writing objects: 100% (11/11), 1.20 KiB | 1.20 MiB/s, done.
+Total 11 (delta 5), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (5/5), completed with 1 local object.
+To https://github.com/Vincemonash/Assignment1.git
+   94f65d2..cde8057  master -> master
 
 
-
-
-### 
-
+##  Expand on your simple report
 
 
 # References

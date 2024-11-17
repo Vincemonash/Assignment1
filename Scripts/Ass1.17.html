@@ -1909,8 +1909,10 @@ display: none;
 <li><a href="#the-data-files-need-to-be-inside-a-folder-called-data.-if-you-need-to-process-the-data-to-reduce-the-size-do-it-before-you-include-the-data-in-your-repository." id="toc-the-data-files-need-to-be-inside-a-folder-called-data.-if-you-need-to-process-the-data-to-reduce-the-size-do-it-before-you-include-the-data-in-your-repository."><span class="toc-section-number">2.1.1</span> The data files need to be inside a folder called Data. If you need to process the data to reduce the size do it before you include the data in your repository.</a></li>
 <li><a href="#ensure-you-commit-changes-with-clear-messages-so-we-can-understand-what-you-did-in-each-commit." id="toc-ensure-you-commit-changes-with-clear-messages-so-we-can-understand-what-you-did-in-each-commit."><span class="toc-section-number">2.1.2</span> Ensure you commit changes with clear messages so we can understand what you did in each commit.</a></li>
 <li><a href="#create-two-branches-and-work-in-them-for-a-few-commits-at-different-times." id="toc-create-two-branches-and-work-in-them-for-a-few-commits-at-different-times."><span class="toc-section-number">2.1.3</span> Create two branches and work in them for a few commits at different times.</a></li>
-<li><a href="#section" id="toc-section"><span class="toc-section-number">2.1.4</span> </a></li>
+<li><a href="#merge-them-with-the-master-branch." id="toc-merge-them-with-the-master-branch."><span class="toc-section-number">2.1.4</span> Merge them with the master branch.</a></li>
+<li><a href="#make-sure-that-at-least-one-branch-creates-a-conflict-with-your-master-branch." id="toc-make-sure-that-at-least-one-branch-creates-a-conflict-with-your-master-branch."><span class="toc-section-number">2.1.5</span> Make sure that at least one branch creates a conflict with your master branch.</a></li>
 </ul></li>
+<li><a href="#expand-on-your-simple-report" id="toc-expand-on-your-simple-report"><span class="toc-section-number">2.2</span> Expand on your simple report</a></li>
 </ul></li>
 <li><a href="#references" id="toc-references">References</a></li>
 </ul>
@@ -3125,10 +3127,61 @@ git commit -m “Add README.md for Assignment 1”</p>
 <p>git checkout master
 git pull origin master
 git merge asspart2B</p>
+<p>git switch asspart2
+vi README.md</p>
+<p>git switch asspart2B
+vi README.md</p>
 </div>
-<div id="section" class="section level3" number="2.1.4">
-<h3><span class="header-section-number">2.1.4</span> </h3>
+<div id="merge-them-with-the-master-branch." class="section level3" number="2.1.4">
+<h3><span class="header-section-number">2.1.4</span> Merge them with the master branch.</h3>
+<p>git switch master
+git checkout master
+git pull origin master
+git merge asspart2B</p>
+<p>git merge asspart2</p>
 </div>
+<div id="make-sure-that-at-least-one-branch-creates-a-conflict-with-your-master-branch." class="section level3" number="2.1.5">
+<h3><span class="header-section-number">2.1.5</span> Make sure that at least one branch creates a conflict with your master branch.</h3>
+<div id="create-commits-that-show-clearly-that-you-merged-the-branches.-in-addition-make-sure-that-you-have-a-commit-showing-that-you-fixed-at-least-one-merging-conflict." class="section level4" number="2.1.5.1">
+<h4><span class="header-section-number">2.1.5.1</span> Create commits that show clearly that you merged the branches. In addition, make sure that you have a commit showing that you fixed at least one merging conflict.</h4>
+<p>$ git merge asspart2
+Auto-merging README.md
+CONFLICT (content): Merge conflict in README.md
+Automatic merge failed; fix conflicts and then commit the result.</p>
+<p># ETO5513 Assignment 1</p>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+## Description:
+Assignment 1 created in branch asspart2B.
+=======
+## Description: Change made in asspart2B branch.
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; asspart2</p>
+<p>git commit -m “Resolved merge conflict in README.md”</p>
+<p>$ vi README.md</p>
+<p><a href="mailto:USER@DESKTOP-KGR3EOI" class="email">USER@DESKTOP-KGR3EOI</a> MINGW64 /d/Monash/ETO5513/Assignment1 (master|MERGING)
+$</p>
+<p><a href="mailto:USER@DESKTOP-KGR3EOI" class="email">USER@DESKTOP-KGR3EOI</a> MINGW64 /d/Monash/ETO5513/Assignment1 (master|MERGING)
+$</p>
+<p><a href="mailto:USER@DESKTOP-KGR3EOI" class="email">USER@DESKTOP-KGR3EOI</a> MINGW64 /d/Monash/ETO5513/Assignment1 (master|MERGING)
+$ git add README.md</p>
+<p><a href="mailto:USER@DESKTOP-KGR3EOI" class="email">USER@DESKTOP-KGR3EOI</a> MINGW64 /d/Monash/ETO5513/Assignment1 (master|MERGING)
+$ git commit -m “Resolved merge conflict in README.md”
+[master cde8057] Resolved merge conflict in README.md</p>
+<p><a href="mailto:USER@DESKTOP-KGR3EOI" class="email">USER@DESKTOP-KGR3EOI</a> MINGW64 /d/Monash/ETO5513/Assignment1 (master)
+$ git push
+Enumerating objects: 15, done.
+Counting objects: 100% (14/14), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (11/11), done.
+Writing objects: 100% (11/11), 1.20 KiB | 1.20 MiB/s, done.
+Total 11 (delta 5), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (5/5), completed with 1 local object.
+To <a href="https://github.com/Vincemonash/Assignment1.git" class="uri">https://github.com/Vincemonash/Assignment1.git</a>
+94f65d2..cde8057 master -&gt; master</p>
+</div>
+</div>
+</div>
+<div id="expand-on-your-simple-report" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Expand on your simple report</h2>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
