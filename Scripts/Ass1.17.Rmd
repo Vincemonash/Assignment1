@@ -1,0 +1,416 @@
+---
+title: "Assignment 1: Data Mini-project"
+author: "Vince Currie"
+date: "`r toupper(format(Sys.Date(), '%d-%b-%Y'))`"
+output:
+  bookdown::html_document2:
+    css: !expr here::here("scripts","custom.css") # Examples taken from https://www.w3schools.com/css/default.asp.
+    toc: true
+    df_print: paged
+    number_sections: true
+    fig_caption: true
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r Setup, message=TRUE, warning=TRUE}
+
+#
+# Set the default behaviour for displaying code in all chunks to ensure that all chunks will display their code, 
+# unless turned off within a specific chunk.
+#
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+
+```
+
+
+# **Part A**: Data mini-project
+
+## Acronyms
+
+|Acronym  |Definition                                              |
+|:--------|:-------------------------------------------------------|
+| ISCED   | International Standard Classification of education     | 
+| ISCED 1 | Primary school                                         |
+
+## Loading libraries
+
+### In this section, you need to load the libraries you will use. This section should be located at the top of the Rmd file.
+
+The libraries are loaded silently in this step.
+
+```{r Libs,  include=FALSE}
+
+#
+# Loading libraries silently.
+#
+
+#
+# Load the 'here' package which provides a useful way
+# to reference the project directory - here uses the top-level directory 
+# of a project to easily build paths to files.
+# source: 
+#    https://here.r-lib.org/
+library(here)
+
+#
+# For knitting document and include_graphics function
+#
+library(knitr)
+
+#
+# Extra kable styling options.
+#
+library(kableExtra)
+library(dplyr)
+library(bookdown)
+library(english)
+library(mice)
+library(tidyr)
+library(ggplot2)
+
+
+```
+
+## Research Question
+
+### Describe in 2 sentences maximum a question you would like to investigate/answer in this report using your selected data.
+
+The research focuses on asking the following questions: 
+
+1. Are both genders now on a course towards achieving comparable educational attainment worldwide? And, 
+
+2. How do the average school years vary across different countries, and what might contribute to differences in education levels between countries?
+
+
+## Data Introduction
+
+```{r JoinIt, warning=FALSE}
+
+#
+# Global variables.
+#
+project_dir <- here::here()
+
+#
+# The data read from the files that were downloaded from the 
+# "Our world in data web site": https://ourworldindata.org/).
+# The two CSV files contain the average years of schooling for female and male subjects.
+#
+data1 <- read.csv(here::here("data", "mean-years-of-schooling-female.csv"))
+data2 <- read.csv(here::here("data", "mean-years-of-schooling-male.csv"))
+
+#
+# Add a gender factor column with "Female" as the only level for the female data and
+# "male" for the male data.
+#
+data1$gender <- factor(rep("Female", nrow(data1)), levels = "Female")
+data2$gender <- factor(rep("Male", nrow(data2)), levels = "Male")
+
+#
+# Rename the 4th column of both data frames to ensure they are named the same because 
+# data1 included "female" and data2 used "male" in their names, respectively.
+#
+names(data1)[4] <- "SchoolYears"
+names(data2)[4] <- "SchoolYears"
+
+#
+# In addiction, rename "Entity" to "Country" and 
+# "Code" to "Ccode" for country code.
+#
+names(data1)[1] <- "Country"
+names(data2)[1] <- "Country"
+names(data1)[2] <- "Ccode"
+names(data2)[2] <- "Ccode"
+
+
+#
+# Combine the two datasets row-wise.
+#
+all_data <- rbind(data1, data2)
+
+
+```
+
+```{r table-DTypes, warning=FALSE, tab.cap="Column Names and <br> Data Types.", tab.cap.style = "inline"}
+
+#
+# Extract column names and data types.
+#    Notes: "sapply()" applies the class function to each column.
+#    in "all_data" to determine its type.
+#
+str_table <- data.frame(
+  Column = names(all_data),
+  Type = sapply(all_data, class),
+  row.names = NULL
+)
+
+#
+# Display column names and data types as a formatted table.
+# Requires the format parameter due to a known issue of double printing the "Table":
+#    https://github.com/haozhu233/kableExtra/issues/831
+#
+knitr::kable(
+  str_table,
+  col.names = c("Column Name", "Data Type"),
+  booktabs = TRUE,
+  format = "html"
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    position = "center",
+    full_width = FALSE
+  )
+
+```
+
+### Briefly describe your data in two sentences using markdown language. You should provide a link to the location of the data inserted in the text using markdown language.
+
+The data source came from two CSV files loaded by this script from `r here::here("data", "mean-years-of-schooling-female.csv")` 
+(@RN14) and `r here::here("data", "mean-years-of-schooling-female.csv")` (@RN15) with the
+original found [here for female data](https://ourworldindata.org/grapher/mean-years-of-schooling-female) and
+[here for male data](https://ourworldindata.org/grapher/mean-years-of-schooling-male). 
+
+### Briefly describe your variables (in no more than 3 sentences for all the variables). 
+
+The data concerns the mean number of times in years of education for individuals sampled across countries over several years. 
+The two datasets are combined to perform the analysis and answer the research question. 
+
+### Create a table using the kable() function from the knitr package to report the variable names.
+
+Shown in Table \@ref(tab:table-DTypes) are the
+variables and their data types of the combined table containing male and female data. The *Country* column indicates the country from which the data 
+comes and is a character string.  Similarly, the *Ccode* column is a string and a three-letter acronym for the country. The *year* indicates when it was
+collected and is an integer. The *SchoolYears* column metric reflects the average duration of education in years that people in that country
+undertook, stored as a float. And finally, the *Gender* variable is a factor value indicating Male or Female.
+
+## Data Set Description
+
+### Using inline R code, write a sentence describing the number of variables and observations in your data set.
+The combined data frame contains **`r english::words(nrow(all_data))`** records. 
+Table \@ref(tab:table-DTypes) shows the **`r english::words(ncol(all_data))`** variables and their data types. 
+
+### In addition, create a screenshot image of your code and save it as a png file. Upload this png file inside the 'Image' folder in your Rstudio Cloud project.
+
+Figure \@ref(fig:TheImage) shows an example of loading a picture of code into the R markdown document.
+
+### Using the function str() display the first 2 rows of the data so you can show the type of variables in the data set (numeric, character/factor etc.).
+
+Table \@ref(tab:StrOut) shows the first two rows of the combined data using the "str()" function. The characteristics of the data
+are more apparent with some data from the first two rows of output. Figure \@ref(fig:Missing) shows no missing
+values in the data because the **`r english::words(nrow(all_data))`** records have 0 missing values; if there were any missing values, 
+it would show a 1 in the output.
+
+<figure>
+```{r TheImage, warning=FALSE, fig.cap="<figcaption>Picture of Code</figcaption>", fig.topcaption=TRUE}
+
+  knitr::include_graphics(here::here("images", "code_screenshot.png"),rel_path=FALSE)
+
+```
+</figure>
+
+```{r StrOut, warning=FALSE, tab.cap="A Sample of <br> the First Two Rows.", tab.cap.style = "inline"}
+#
+# The "capture.output()" captures the console output of str().
+# Capture the output of str() for the first two rows.
+str_output <- capture.output(str(all_data[1:2, ]))
+
+#
+# Convert the captured output to a data frame.
+#
+str_output_df <- data.frame(StructureInfo = str_output)
+
+#
+# Remove the first row (after the column name) which is the str output about 
+# the observations and variable number which has already been discussed.
+# The str_output_df[-1, , drop = FALSE] removes the first row of data while keeping 
+# the column name intact. 
+#
+str_output_df <- str_output_df[-1, ,drop = FALSE]
+
+#
+# Display the output from str() for the first two rows.
+#
+knitr::kable(str_output_df, longtable = TRUE, align = "c", format = "html") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    position = "center",
+    full_width = FALSE)
+```
+
+```{r Missing, warning=FALSE, fig.cap="Check for <br> Missing Values", fig.topcaption=TRUE }
+#
+# Visualize missingness pattern.
+# A 1 indicates no missing values and 0 indicates missing values.
+#
+md.pattern(all_data)
+```
+
+
+## Data Summary
+
+### Using functions from the dplyr package, select 2 numerical \n variables and one character/factor variable. 
+
+```{r EdStats, warning=FALSE}
+
+#
+# Calculate the mean years in education per country and Gender.
+# The group_by(Country, Gender) groups the data country and Gender.
+#
+mean_education <- all_data %>%
+#  filter(Country == "Afghanistan") %>%
+  group_by(Country, gender) %>%
+  summarise(
+  # Education statistics
+            meanEd = round(mean(SchoolYears, na.rm = TRUE),2),
+            medEd = round(median(SchoolYears, na.rm = TRUE),2),
+            minEd = round(min(SchoolYears, na.rm = TRUE),2),
+            maxEd = round(max(SchoolYears, na.rm = TRUE),2),
+            StdDevEd = round(ifelse(is.na(sd(SchoolYears, na.rm = TRUE)),0,
+                                  sd(SchoolYears, na.rm = TRUE)),2),
+   # Year statistics
+           meanYear = round(mean(Year, na.rm = TRUE), 0),
+           medYear = round(median(Year, na.rm = TRUE), 0),
+           minYear = round(min(Year, na.rm = TRUE), 0),
+           maxYear = round(max(Year, na.rm = TRUE), 0),
+           StdDevYear = round(sd(Year, na.rm = TRUE), 0),  # Standard deviation for Year
+   
+            .groups = "drop") 
+#
+# Display top and bottom 5 rows of the 'mean_education' table.
+#
+mean_education_10 <- rbind(head(mean_education,5),tail(mean_education,5)) 
+
+#
+# Display the summary as a formatted table.
+#
+kable(mean_education_10, format = "html", 
+      caption = "Top Five and Bottom Rows <br> Showing Statistics <br> for Years of Schooling (Ed) and Years of Data Collection (Year) <br> \
+      by Country and Gender.") %>%
+ kable_styling(bootstrap_options = c("striped", "hover"),
+               full_width = FALSE)
+```
+
+### Using some of the available options inside the kable() function add a caption for the table.
+
+```{r EdGap, warning=FALSE}
+
+#
+# Create an education_gap column by calculating the difference between
+# male and female min/max years of education.
+#
+mean_education_with_gap <- mean_education %>%
+#  filter(Country == "Afghanistan") %>%
+  select(Country, gender, minEd, maxEd) %>%
+  pivot_wider(names_from = gender, values_from = c(minEd,maxEd)) %>%
+ rename( # Rename columns for clarity 
+    min_male = minEd_Male, 
+    min_female = minEd_Female,
+    max_male = maxEd_Male,
+    max_female = maxEd_Female
+  ) %>%  
+ mutate(
+   min_education_gap = min_male - min_female,
+   max_education_gap = max_male - max_female
+ )
+
+
+#
+# Display top and bottom 5 rows of the 'mean_education' table.
+#
+mean_education_with_gap_10 <- rbind(head(mean_education_with_gap,5),tail(mean_education_with_gap,5))
+
+#
+# Display the summary as a formatted table.
+#
+kable(mean_education_with_gap_10, format = "html", 
+      caption = "Top Five and Bottom Rows <br> Showing Years of Schooling Gender Gap <br> by Country.") %>%
+ kable_styling(bootstrap_options = c("striped", "hover"),
+               full_width = FALSE)
+
+```
+
+### Describe in two sentences what you observe from the data summary, and write one of the words in the sentence using bold font.
+
+Table \@ref(tab:EdStats) summarizes education data, but this discussion considers only the ten rows shown, highlighting critical statistics
+for years of schooling and record collection. For example, In Afghanistan, there is a significant gap between males and females, with females
+averaging 0.92 years and males 2.68 years. The median years of education are also lower for females, at 0.75 years compared to 3.40 years for
+males. In Algeria, the gap is smaller, with males averaging 6.21 years and females 4.46 years. In Albania, the educational gap is minimal,
+with males averaging 10.01 years of schooling and females 9.18 years. Afghanistan has a notably low mean of 0.92 years for females.
+Consequently, educational opportunities are more equally distributed between genders in Albania, though males still generally have a 
+slight advantage in terms of years of schooling. 
+
+The table highlights **gender disparities in education**, particularly in Afghanistan, where girls receive significantly less schooling than
+boys. Overall, the data collected spans from 1971 to 2022. Afghanistan’s records cover a long period from 1975 to 2022, with a standard
+deviation of 23 years. In contrast, Albania has a standard deviation of 6 years, with data collection from 2001 to 2017. The difference
+emphasises that the disparity in Afghanistan has occurred over a long period without much improvement.
+
+Table  \@ref(tab:EdGap) shows the education gap at the low and higher ends of education for the ten rows shown. In Afghanistan, girls average
+only 0.92 years of schooling, peaking at 2.31 years, while boys average 2.68 years, with a maximum of 3.91 years. The significant education
+gap, ranging from 1.02 to 1.60 years, highlights the disparity in access to education based on gender.
+By contrast, in Albania, the gap in education between males and females is small. Females have an average of 9.18 years of schooling, while
+males have 10.01 years. At the lower education end, the smallest gap is 1.18 years; on the more educated end, the gap is only 0.47 years,
+showing that both genders have approximately equal access to education. Afghanistan has a significant education gap between boys and girls, while Albania has made strides toward gender equality in education.
+
+## Visualisations
+
+### Create one figure (connected with your research question) of your data and add a caption using the relevant options inside the R code chunk
+
+```{r OneFig, warning=FALSE, fig.cap="Education Disparity by Country & Gender <br> for Ten Rows (Excluding Vietnam and Algeria)", fig.topcaption=TRUE}
+
+#
+# Exclude Vietnam and Algeria, and create the plot.
+# Vietnam and Algeria are missing the required two records
+# within the ten rows being examined so they are excluded.
+#
+ggplot(mean_education_10 %>%
+         filter(!Country %in% c("Vietnam", "Algeria")), aes(x = Country, fill = gender)) +
+  # Bar plot for mean education.
+  geom_bar(aes(y = meanEd), stat = "identity", position = "dodge", width = 0.6, alpha = 0.7) +
+  
+  # Point plot for maximum education (overlayed on the bar plot).
+  geom_point(aes(y = maxEd, color = gender), size = 3, position = position_dodge(width = 0.6)) +
+  
+  # Add text labels for the maximum education points.
+  geom_label(aes(y = maxEd, label = paste("Max\n", round(maxEd, 2)), color = gender),
+           position = position_dodge(width = 0.6), vjust = -0.5, size = 3, fontface = "bold") +
+   
+  # Set y-axis limits to extend the range.
+ # ylim(0, 18) +  # Adjust the upper limit as needed
+  
+    # Set the y-axis with more ticks
+  scale_y_continuous(breaks = seq(0, 16, by = 0.5), limits = c(0, 18)) +  # Increase the ticks 
+  
+  # Line to join the points for maximum education.
+  geom_line(aes(y = maxEd, group = Country, color = gender), size = 1, position = position_dodge(width = 0.6)) +
+  
+  # Customize the plot.
+  labs(x = "Country", y = "Years of Education") +
+  theme_minimal() +
+  scale_fill_manual(values = c("lightblue", "salmon")) +
+  scale_color_manual(values = c("blue", "red")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  
+
+```
+
+### Using markdown language, add a list with two bullet points describing what you see in the figure using italic font.
+
+
+* *Afghanistan has a notable gender gap in education, with females averaging only 0.92 years (refer Table \@ref(tab:EdStats)) of schooling (max 2.31 years) compared to males at 2.68 years (refer Table \@ref(tab:EdStats)) (max 3.91 years). The disparity is likely due to cultural, social, and political factors, highlighting significant inequalities in access to education for women.*
+
+* *Albania demonstrates better gender equality in education, with girls averaging 9.18 years and boys 10.01 years. The minor differences in the educational gap  (refer Table \@ref(tab:EdGap)) from the least educated (1.18 years) to the highest educated (0.47 years) indicate approximately equal educational opportunities for both genders.*
+
+
+## Conclusions
+
+### Concisely state (no more than 150 words) what conclusions can be made from your data analysis. Once again, remember to link your conclusions back to your original research question
+
+Data analysis reveals a significant gap in educational achievement between boys and girls, particularly in poorer or unstable countries. For instance, girls in Afghanistan have much less schooling than boys, highlighting stark inequalities. While Albania offers equal educational access, Afghanistan shows lower overall educational levels. These disparities influence economic conditions, political stability, and cultural attitudes, leading to unequal opportunities. Despite global progress, efforts remain essential to ensure equal educational opportunities for all genders worldwide.
+
+# Github
+
+https://github.com/Vincemonash/Assignment1.git
+
+
+# References
+
