@@ -426,6 +426,32 @@ The steps below were used to set-up a repository and create a new branch for par
 11. git push -u origin asspart2
 
 
+### The data files need to be inside a folder called Data. If you need to process the data to reduce the size do it before you include the data in your repository.
+
+The 'data' directory add for the data files.
+
+### Ensure you commit changes with clear messages so we can understand what you did in each commit.
+
+Use the following example command: git commit -m "Changes to accomodate part 2 of assignment 1".
+
+### Create two branches and work in them for a few commits at different times.
+
+One branch created: "git checkout -b asspart2".
+Second branch created: "git checkout -b asspart2B".
+
+echo "# ETO5513 Assignment 1" > README.md
+git add README.md
+git commit -m "Add README.md for Assignment 1"
+
+git checkout master
+git pull origin master
+git merge asspart2B
+
+
+
+
+
+### 
 
 
 

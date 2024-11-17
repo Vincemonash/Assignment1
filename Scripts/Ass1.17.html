@@ -1904,7 +1904,13 @@ display: none;
 </ul></li>
 <li><a href="#part-b-mini-project-repository" id="toc-part-b-mini-project-repository"><span class="toc-section-number">2</span> <strong>Part B</strong>: Mini-Project Repository</a>
 <ul>
-<li><a href="#create-your-github-repository-and-link-your-mini-project." id="toc-create-your-github-repository-and-link-your-mini-project."><span class="toc-section-number">2.1</span> Create your GitHub repository and link your mini-project.</a></li>
+<li><a href="#create-your-github-repository-and-link-your-mini-project." id="toc-create-your-github-repository-and-link-your-mini-project."><span class="toc-section-number">2.1</span> Create your GitHub repository and link your mini-project.</a>
+<ul>
+<li><a href="#the-data-files-need-to-be-inside-a-folder-called-data.-if-you-need-to-process-the-data-to-reduce-the-size-do-it-before-you-include-the-data-in-your-repository." id="toc-the-data-files-need-to-be-inside-a-folder-called-data.-if-you-need-to-process-the-data-to-reduce-the-size-do-it-before-you-include-the-data-in-your-repository."><span class="toc-section-number">2.1.1</span> The data files need to be inside a folder called Data. If you need to process the data to reduce the size do it before you include the data in your repository.</a></li>
+<li><a href="#ensure-you-commit-changes-with-clear-messages-so-we-can-understand-what-you-did-in-each-commit." id="toc-ensure-you-commit-changes-with-clear-messages-so-we-can-understand-what-you-did-in-each-commit."><span class="toc-section-number">2.1.2</span> Ensure you commit changes with clear messages so we can understand what you did in each commit.</a></li>
+<li><a href="#create-two-branches-and-work-in-them-for-a-few-commits-at-different-times." id="toc-create-two-branches-and-work-in-them-for-a-few-commits-at-different-times."><span class="toc-section-number">2.1.3</span> Create two branches and work in them for a few commits at different times.</a></li>
+<li><a href="#section" id="toc-section"><span class="toc-section-number">2.1.4</span> </a></li>
+</ul></li>
 </ul></li>
 <li><a href="#references" id="toc-references">References</a></li>
 </ul>
@@ -3101,6 +3107,28 @@ Figure 1.3: Education Disparity by Country &amp; Gender <br> for Ten Rows (Exclu
 <li>git commit -m “Changes to accomodate part 2 of assignment 1”</li>
 <li>git push -u origin asspart2</li>
 </ol>
+<div id="the-data-files-need-to-be-inside-a-folder-called-data.-if-you-need-to-process-the-data-to-reduce-the-size-do-it-before-you-include-the-data-in-your-repository." class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> The data files need to be inside a folder called Data. If you need to process the data to reduce the size do it before you include the data in your repository.</h3>
+<p>The ‘data’ directory add for the data files.</p>
+</div>
+<div id="ensure-you-commit-changes-with-clear-messages-so-we-can-understand-what-you-did-in-each-commit." class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Ensure you commit changes with clear messages so we can understand what you did in each commit.</h3>
+<p>Use the following example command: git commit -m “Changes to accomodate part 2 of assignment 1”.</p>
+</div>
+<div id="create-two-branches-and-work-in-them-for-a-few-commits-at-different-times." class="section level3" number="2.1.3">
+<h3><span class="header-section-number">2.1.3</span> Create two branches and work in them for a few commits at different times.</h3>
+<p>One branch created: “git checkout -b asspart2”.
+Second branch created: “git checkout -b asspart2B”.</p>
+<p>echo “# ETO5513 Assignment 1” &gt; README.md
+git add README.md
+git commit -m “Add README.md for Assignment 1”</p>
+<p>git checkout master
+git pull origin master
+git merge asspart2B</p>
+</div>
+<div id="section" class="section level3" number="2.1.4">
+<h3><span class="header-section-number">2.1.4</span> </h3>
+</div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
