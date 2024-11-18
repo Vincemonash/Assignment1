@@ -68,6 +68,7 @@ library(english)
 library(mice)
 library(tidyr)
 library(ggplot2)
+library(reshape2)
 
 
 ```
@@ -449,6 +450,50 @@ git merge asspart2B
 ### include one additional figure and table describing the data
 
 Table  \@ref(tab:EdGap) shows the education gap at the low and higher ends of education for the ten rows shown. The education gap between boys and girls is significant in countries like Afghanistan, where girls have fewer years of schooling due to barriers. In contrast, Albania shows progress, with girls and boys attaining similar educational levels.
+
+Figure \@ref(fig:EdGapsGrph) shows the data from Table  \@ref(tab:EdGap) and illustrates the difference in the years of schooling between males and females in twelve countries. Andorra has a small gap (0.13 to 0.18), while Angola shows a significant gap (1.82 to 2.70). In Uruguay and Venezuela, the gap favours females, whereas in Afghanistan and Algeria, there are more considerable gaps favouring males. Countries like Uzbekistan and Vietnam exhibit relatively balanced gaps. Possible reasons for differences in the data emphasize the impact of cultural, social, and economic factors on educational gender equality, highlighting the ongoing need for equal education for all genders.
+
+
+```{r EdGapsGrph,  fig.cap="Gender Education Gap by Country <br> for Twelve Rows", fig.topcaption=TRUE}
+
+#
+# Transform the data into long format for ggplot.
+#
+data_long <- reshape2::melt(mean_education_with_gap_12,
+                            id.vars = "Country",
+                            measure.vars = c("min_education_gap","max_education_gap"),
+                            variable.name = "Gap_Type",
+                            value.name = "Gap_Value")
+
+#
+# Add a column to distinguish male vs female gap visually.
+#
+data_long$Gap_Favor <- ifelse(data_long$Gap_Value > 0, "Male", "Female")
+
+#
+# Produce the graph that shows which way education gap points:
+# Negative is female and positive is male.
+#
+ggplot(data_long, aes(x = Country, y = Gap_Value, fill = interaction(Gap_Type, Gap_Favor))) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
+  scale_fill_manual(values = c(
+    "min_education_gap.Female" = "blue",
+    "min_education_gap.Male" = "red",
+    "max_education_gap.Male" = "green",
+    "max_education_gap.Female" = "orange"
+  )) +
+  geom_hline(yintercept = 0, color = "black", linetype = "dashed") +
+  scale_y_continuous(breaks = seq(-1, 10, 0.5)) + # Adds more y-axis ticks from -1 to 10 in steps of 0.5
+  labs(
+    x = "Country",
+    y = "Years of Schooling Gap",
+    fill = "Gap Type & Favor"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
 
 
 # References
