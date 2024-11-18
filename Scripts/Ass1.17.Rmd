@@ -467,15 +467,6 @@ Auto-merging README.md
 CONFLICT (content): Merge conflict in README.md
 Automatic merge failed; fix conflicts and then commit the result.
 
-\# ETO5513 Assignment 1
-
-\<<<<<<< HEAD
-\#\# Description:
-Assignment 1 created in branch asspart2B.
-=======
-\#\# Description: Change made in asspart2B branch.
-\>>>>>>> asspart2
-
 git commit -m "Resolved merge conflict in README.md"
 
 $ vi README.md
