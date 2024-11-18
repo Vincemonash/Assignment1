@@ -4,7 +4,7 @@ author: "Vince Currie"
 date: "`r toupper(format(Sys.Date(), '%d-%b-%Y'))`"
 output:
   bookdown::html_document2:
-    css: !expr here::here("scripts","custom.css") # Examples taken from https://www.w3schools.com/css/default.asp.
+    css: !expr here::here("Scripts","custom.css") # Examples taken from https://www.w3schools.com/css/default.asp.
     toc: true
     df_print: paged
     number_sections: true
@@ -98,8 +98,8 @@ project_dir <- here::here()
 # "Our world in data web site": https://ourworldindata.org/).
 # The two CSV files contain the average years of schooling for female and male subjects.
 #
-data1 <- read.csv(here::here("data", "mean-years-of-schooling-female.csv"))
-data2 <- read.csv(here::here("data", "mean-years-of-schooling-male.csv"))
+data1 <- read.csv(here::here("Data", "mean-years-of-schooling-female.csv"))
+data2 <- read.csv(here::here("Data", "mean-years-of-schooling-male.csv"))
 
 #
 # Add a gender factor column with "Female" as the only level for the female data and
@@ -205,7 +205,7 @@ it would show a 1 in the output.
 <figure>
 ```{r TheImage, warning=FALSE, fig.cap="<figcaption>Picture of Code</figcaption>", fig.topcaption=TRUE}
 
-  knitr::include_graphics(here::here("images", "code_screenshot.png"),rel_path=FALSE)
+  knitr::include_graphics(here::here("Images", "code_screenshot.png"),rel_path=FALSE)
 
 ```
 </figure>
