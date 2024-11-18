@@ -469,12 +469,12 @@ Automatic merge failed; fix conflicts and then commit the result.
 
 \# ETO5513 Assignment 1
 
-<<<<<<< HEAD
+\<<<<<<< HEAD
 \#\# Description:
 Assignment 1 created in branch asspart2B.
 =======
 \#\# Description: Change made in asspart2B branch.
->>>>>>> asspart2
+\>>>>>>> asspart2
 
 git commit -m "Resolved merge conflict in README.md"
 
@@ -504,8 +504,6 @@ Total 11 (delta 5), reused 0 (delta 0), pack-reused 0 (from 0)
 remote: Resolving deltas: 100% (5/5), completed with 1 local object.
 To https://github.com/Vincemonash/Assignment1.git
    94f65d2..cde8057  master -> master
-
-
 
 ## Expand on Your Simple report
 
