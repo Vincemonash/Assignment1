@@ -68,6 +68,7 @@ library(english)
 library(mice)
 library(tidyr)
 library(ggplot2)
+library(reshape2)
 
 
 ```
@@ -277,15 +278,15 @@ mean_education <- all_data %>%
    
             .groups = "drop") 
 #
-# Display top and bottom 5 rows of the 'mean_education' table.
+# Display top and bottom 6 rows of the 'mean_education' table.
 #
-mean_education_10 <- rbind(head(mean_education,5),tail(mean_education,5)) 
+mean_education_12 <- rbind(head(mean_education,6),tail(mean_education,6)) 
 
 #
 # Display the summary as a formatted table.
 #
-kable(mean_education_10, format = "html", 
-      caption = "Top Five and Bottom Rows <br> Showing Statistics <br> for Years of Schooling (Ed) and Years of Data Collection (Year) <br> \
+kable(mean_education_12, format = "html", 
+      caption = "Top Six and Bottom Rows <br> Showing Statistics <br> for Years of Schooling (Ed) and Years of Data Collection (Year) <br> \
       by Country and Gender.") %>%
  kable_styling(bootstrap_options = c("striped", "hover"),
                full_width = FALSE)
@@ -316,15 +317,15 @@ mean_education_with_gap <- mean_education %>%
 
 
 #
-# Display top and bottom 5 rows of the 'mean_education' table.
+# Display top and bottom 6 rows of the 'mean_education' table.
 #
-mean_education_with_gap_10 <- rbind(head(mean_education_with_gap,5),tail(mean_education_with_gap,5))
+mean_education_with_gap_12 <- rbind(head(mean_education_with_gap,6),tail(mean_education_with_gap,6))
 
 #
 # Display the summary as a formatted table.
 #
-kable(mean_education_with_gap_10, format = "html", 
-      caption = "Top Five and Bottom Rows <br> Showing Years of Schooling Gender Gap <br> by Country.") %>%
+kable(mean_education_with_gap_12, format = "html", 
+      caption = "Top Six and Bottom Rows <br> Showing Years of Schooling Gender Gap <br> by Country.") %>%
  kable_styling(bootstrap_options = c("striped", "hover"),
                full_width = FALSE)
 
@@ -332,39 +333,37 @@ kable(mean_education_with_gap_10, format = "html",
 
 ### Describe in two sentences what you observe from the data summary, and write one of the words in the sentence using bold font.
 
-Table \@ref(tab:EdStats) summarizes education data, but this discussion considers only the ten rows shown, highlighting critical statistics
+Table \@ref(tab:EdStats) summarises education data, but this discussion considers only the rows displayed, highlighting critical statistics
 for years of schooling and record collection. For example, In Afghanistan, there is a significant gap between males and females, with females
 averaging 0.92 years and males 2.68 years. The median years of education are also lower for females, at 0.75 years compared to 3.40 years for
-males. In Algeria, the gap is smaller, with males averaging 6.21 years and females 4.46 years. In Albania, the educational gap is minimal,
-with males averaging 10.01 years of schooling and females 9.18 years. Afghanistan has a notably low mean of 0.92 years for females.
-Consequently, educational opportunities are more equally distributed between genders in Albania, though males still generally have a 
-slight advantage in terms of years of schooling. 
+males. In Albania, the educational gap is minimal, with males averaging 10.01 years of schooling and females 9.18 years. Afghanistan has a
+notably low mean of 0.92 years for females. Consequently, educational opportunities are more equally distributed between genders in Albania,
+though males still generally have a slight advantage in terms of years of schooling. 
 
 The table highlights **gender disparities in education**, particularly in Afghanistan, where girls receive significantly less schooling than
 boys. Overall, the data collected spans from 1971 to 2022. Afghanistan’s records cover a long period from 1975 to 2022, with a standard
 deviation of 23 years. In contrast, Albania has a standard deviation of 6 years, with data collection from 2001 to 2017. The difference
 emphasises that the disparity in Afghanistan has occurred over a long period without much improvement.
 
-Table  \@ref(tab:EdGap) shows the education gap at the low and higher ends of education for the ten rows shown. In Afghanistan, girls average
-only 0.92 years of schooling, peaking at 2.31 years, while boys average 2.68 years, with a maximum of 3.91 years. The significant education
-gap, ranging from 1.02 to 1.60 years, highlights the disparity in access to education based on gender.
+Table  \@ref(tab:EdGap) shows the education gap for the rows displayed at the lower and higher ends of education. In Afghanistan, girls average only 0.92 years of schooling, peaking at 2.31 years, while boys average 2.68 years, with a maximum of 3.91 years. The significant education gap, ranging from 1.02 to 1.60 years, highlights the disparity in access to education based on gender. However, educational options for both genders are approximately < four years, indicating multifaceted economic, political and cultural issues.
+
 By contrast, in Albania, the gap in education between males and females is small. Females have an average of 9.18 years of schooling, while
 males have 10.01 years. At the lower education end, the smallest gap is 1.18 years; on the more educated end, the gap is only 0.47 years,
-showing that both genders have approximately equal access to education. Afghanistan has a significant education gap between boys and girls, while Albania has made strides toward gender equality in education.
+showing that both genders have approximately equal access to education at the higher end. The education gap for the less educated is about the same as in Afghanistan, but given the average years of education, which is about double that of Afghanistan, the impact is marginal. Consequently, Afghanistan has a significant education gap between boys and girls, while Albania has made strides toward gender equality in education.
 
 ## Visualisations
 
 ### Create one figure (connected with your research question) of your data and add a caption using the relevant options inside the R code chunk
 
-```{r OneFig, warning=FALSE, fig.cap="Education Disparity by Country & Gender <br> for Ten Rows (Excluding Vietnam and Algeria)", fig.topcaption=TRUE}
+```{r OneFig, warning=FALSE, fig.cap="Education Disparity by Country & Gender <br> for Twelve Rows", fig.topcaption=TRUE}
 
 #
 # Exclude Vietnam and Algeria, and create the plot.
 # Vietnam and Algeria are missing the required two records
 # within the ten rows being examined so they are excluded.
 #
-ggplot(mean_education_10 %>%
-         filter(!Country %in% c("Vietnam", "Algeria")), aes(x = Country, fill = gender)) +
+ggplot(mean_education_12,
+        aes(x = Country, fill = gender)) +
   # Bar plot for mean education.
   geom_bar(aes(y = meanEd), stat = "identity", position = "dodge", width = 0.6, alpha = 0.7) +
   
@@ -375,10 +374,7 @@ ggplot(mean_education_10 %>%
   geom_label(aes(y = maxEd, label = paste("Max\n", round(maxEd, 2)), color = gender),
            position = position_dodge(width = 0.6), vjust = -0.5, size = 3, fontface = "bold") +
    
-  # Set y-axis limits to extend the range.
- # ylim(0, 18) +  # Adjust the upper limit as needed
-  
-    # Set the y-axis with more ticks
+   # Set the y-axis with more ticks
   scale_y_continuous(breaks = seq(0, 16, by = 0.5), limits = c(0, 18)) +  # Increase the ticks 
   
   # Line to join the points for maximum education.
@@ -396,16 +392,16 @@ ggplot(mean_education_10 %>%
 ### Using markdown language, add a list with two bullet points describing what you see in the figure using italic font.
 
 
-* *Afghanistan has a notable gender gap in education, with females averaging only 0.92 years (refer Table \@ref(tab:EdStats)) of schooling (max 2.31 years) compared to males at 2.68 years (refer Table \@ref(tab:EdStats)) (max 3.91 years). The disparity is likely due to cultural, social, and political factors, highlighting significant inequalities in access to education for women.*
+* *Afghanistan has a notable gender gap in education, with females averaging only 0.92 years (refer to Table \@ref(tab:EdStats)) of schooling (max 2.31 years) compared to males at 2.68 years (refer to Table \@ref(tab:EdStats)) (max 3.91 years). The disparity is likely due to cultural, social, and political factors, highlighting significant inequalities in access to education for women.*
 
-* *Albania demonstrates better gender equality in education, with girls averaging 9.18 years and boys 10.01 years. The minor differences in the educational gap  (refer Table \@ref(tab:EdGap)) from the least educated (1.18 years) to the highest educated (0.47 years) indicate approximately equal educational opportunities for both genders.*
+* *Albania demonstrates better gender equality in education, with girls averaging 9.18 years and boys 10.01 years. The minor differences in the educational gap  (refer to Table \@ref(tab:EdGap)) from the least educated (1.18 years) to the highest educated (0.47 years) indicate approximately equal educational opportunities for both genders.*
 
 
 ## Conclusions
 
 ### Concisely state (no more than 150 words) what conclusions can be made from your data analysis. Once again, remember to link your conclusions back to your original research question
 
-Data analysis reveals a significant gap in educational achievement between boys and girls, particularly in poorer or unstable countries. For instance, girls in Afghanistan have much less schooling than boys, highlighting stark inequalities. While Albania offers equal educational access, Afghanistan shows lower overall educational levels. These disparities influence economic conditions, political stability, and cultural attitudes, leading to unequal opportunities. Despite global progress, efforts remain essential to ensure equal educational opportunities for all genders worldwide.
+Data analysis reveals a significant gap in educational achievement between boys and girls in poorer countries. For instance, girls in Afghanistan have much less schooling than boys, highlighting stark inequalities. In comparison, Albania offers equal educational access of about two times that of Afghanistan, where Afghanistan shows lower overall educational levels of approximately < four years. These disparities influence economic conditions, political stability, and cultural attitudes, leading to unequal opportunities. Despite global progress, efforts remain essential to ensure equal educational opportunities for all genders worldwide.
 
 # **Part B**: Mini-Project Repository
 
@@ -510,7 +506,56 @@ To https://github.com/Vincemonash/Assignment1.git
    94f65d2..cde8057  master -> master
 
 
-##  Expand on your simple report
+
+## Expand on Your Simple report
+
+### include one additional figure and table describing the data
+
+Table  \@ref(tab:EdGap) shows the education gap at the low and higher ends of education for the ten rows shown. The education gap between boys and girls is significant in countries like Afghanistan, where girls have fewer years of schooling due to barriers. In contrast, Albania shows progress, with girls and boys attaining similar educational levels.
+
+Figure \@ref(fig:EdGapsGrph) shows the data from Table  \@ref(tab:EdGap) and illustrates the difference in the years of schooling between males and females in twelve countries. Andorra has a small gap (0.13 to 0.18), while Angola shows a significant gap (1.82 to 2.70). In Uruguay and Venezuela, the gap favours females, whereas in Afghanistan and Algeria, there are more considerable gaps favouring males. Countries like Uzbekistan and Vietnam exhibit relatively balanced gaps. Possible reasons for differences in the data emphasize the impact of cultural, social, and economic factors on educational gender equality, highlighting the ongoing need for equal education for all genders.
+
+
+```{r EdGapsGrph,  fig.cap="Gender Education Gap by Country <br> for Twelve Rows", fig.topcaption=TRUE}
+
+#
+# Transform the data into long format for ggplot.
+#
+data_long <- reshape2::melt(mean_education_with_gap_12,
+                            id.vars = "Country",
+                            measure.vars = c("min_education_gap","max_education_gap"),
+                            variable.name = "Gap_Type",
+                            value.name = "Gap_Value")
+
+#
+# Add a column to distinguish male vs female gap visually.
+#
+data_long$Gap_Favor <- ifelse(data_long$Gap_Value > 0, "Male", "Female")
+
+#
+# Produce the graph that shows which way education gap points:
+# Negative is female and positive is male.
+#
+ggplot(data_long, aes(x = Country, y = Gap_Value, fill = interaction(Gap_Type, Gap_Favor))) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
+  scale_fill_manual(values = c(
+    "min_education_gap.Female" = "blue",
+    "min_education_gap.Male" = "red",
+    "max_education_gap.Male" = "green",
+    "max_education_gap.Female" = "orange"
+  )) +
+  geom_hline(yintercept = 0, color = "black", linetype = "dashed") +
+  scale_y_continuous(breaks = seq(-1, 10, 0.5)) + # Adds more y-axis ticks from -1 to 10 in steps of 0.5
+  labs(
+    x = "Country",
+    y = "Years of Schooling Gap",
+    fill = "Gap Type & Favor"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
 
 
 # References
